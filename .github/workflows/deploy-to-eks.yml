@@ -1,7 +1,7 @@
-name: CD - Deploy to EKS
+name: CD - Deploy to EKS with Kubectl
 
 on:
-  workflow_dispatch:  # Allows manual trigger
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -9,10 +9,9 @@ jobs:
     env:
       AWS_REGION: us-east-1
       EKS_CLUSTER: otel-demo-cluster
-      IMAGE_TAG: latest  # Or use commit SHA if needed
 
     steps:
-    - name: Checkout code
+    - name: Checkout repo
       uses: actions/checkout@v3
 
     - name: Configure AWS credentials
@@ -25,19 +24,14 @@ jobs:
     - name: Update kubeconfig
       run: aws eks update-kubeconfig --name $EKS_CLUSTER --region $AWS_REGION
 
-    - name: Install Helm
-      run: |
-        curl -LO https://get.helm.sh/helm-v3.13.0-linux-amd64.tar.gz
-        tar -xzf helm-v3.13.0-linux-amd64.tar.gz
-        sudo mv linux-amd64/helm /usr/local/bin/helm
+    - name: 🔍 Check cluster connection
+      run: kubectl get nodes
 
-    - name: Add Helm repo and deploy
-      run: |
-        helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
-        helm repo update
-        helm upgrade --install otel-cd-release open-telemetry/opentelemetry-demo \
-        --version 0.27.0 \
-        --namespace otel-cd \
-        --create-namespace \
-        --atomic --wait
+    - name: 🏗 Create otel-demo namespace
+      run: kubectl create namespace otel-demo --dry-run=client -o yaml | kubectl apply -f -
 
+    - name: 📦 Clone and apply OpenTelemetry manifests
+      run: |
+        git clone https://github.com/open-telemetry/opentelemetry-demo.git
+        cd opentelemetry-demo
+        kubectl apply -n otel-demo -f ./kubernetes/opentelemetry-demo.yaml
