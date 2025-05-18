@@ -36,6 +36,8 @@ jobs:
         helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
         helm repo update
         helm upgrade --install otel-cd-release open-telemetry/opentelemetry-demo \
-          --namespace otel-cd \
-          --create-namespace \
-          --atomic --wait
+        --version 0.27.0 \
+        --namespace otel-cd \
+        --create-namespace \
+        --atomic --wait
+
