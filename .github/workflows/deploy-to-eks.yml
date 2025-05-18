@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AWS_REGION: us-east-1
-      EKS_CLUSTER: otel-cluster
+      EKS_CLUSTER: otel-demo-cluster
       IMAGE_TAG: latest  # Or use commit SHA if needed
 
     steps:
