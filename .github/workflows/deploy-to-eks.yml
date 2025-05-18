@@ -33,5 +33,5 @@ jobs:
     - name: 📦 Clone and apply OpenTelemetry manifests
       run: |
         git clone https://github.com/nkafridi1/opentelemetry-demo-FinalProject.git
-        cd opentelemetry-demo
+        cd opentelemetry-demo-FinalProject
         kubectl apply -n otel-demo -f ./kubernetes/opentelemetry-demo.yaml
