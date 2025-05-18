@@ -38,6 +38,4 @@ jobs:
         helm upgrade --install otel-cd-release open-telemetry/opentelemetry-demo \
           --namespace otel-cd \
           --create-namespace \
-          --set default.image.repository=naveedumd/otel-demo \
-          --set default.image.tag=${{ env.IMAGE_TAG }} \
           --atomic --wait
